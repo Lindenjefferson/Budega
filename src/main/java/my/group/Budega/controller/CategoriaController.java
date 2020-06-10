@@ -22,7 +22,7 @@ public class CategoriaController {
 
 	@Autowired
 	CategoriaRepository categoriaRepository;
-	
+
 	@GetMapping("/categoria")
 	public ResponseEntity<List<Categoria>> getAllCategorias() {
 		List<Categoria> categoriaList = categoriaRepository.findAll();
@@ -32,9 +32,9 @@ public class CategoriaController {
 			return new ResponseEntity<List<Categoria>>(categoriaList, HttpStatus.OK);
 		}
 	}
-	
+
 	@GetMapping("/categoria/{id}")
-	public ResponseEntity<Categoria> getCategoria(@PathVariable(value = "id") long id){
+	public ResponseEntity<Categoria> getCategoria(@PathVariable(value = "id") long id) {
 		Optional<Categoria> categoria = categoriaRepository.findById(id);
 		if (categoria.isPresent()) {
 			return new ResponseEntity<Categoria>(categoria.get(), HttpStatus.OK);
@@ -42,25 +42,27 @@ public class CategoriaController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
+
 	@PostMapping("/categoria")
-	public ResponseEntity<Categoria> saveCategoria(@RequestBody Categoria categoria){
+	public ResponseEntity<Categoria> saveCategoria(@RequestBody Categoria categoria) {
 		return new ResponseEntity<Categoria>(categoriaRepository.save(categoria), HttpStatus.CREATED);
 	}
-	
+
 	@DeleteMapping("/categoria/{id}")
-	public ResponseEntity<Categoria> deleteCategoria(@PathVariable(value="id") long id){
+	public ResponseEntity<Categoria> deleteCategoria(@PathVariable(value = "id") long id) {
 		Optional<Categoria> categoria = categoriaRepository.findById(id);
 		if (categoria.isPresent()) {
 			categoriaRepository.deleteById(id);
 			return new ResponseEntity<>(HttpStatus.OK);
+			//Como retornar um aviso no response HTTP
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
+
 	@PutMapping("/categoria/{id}")
-	public ResponseEntity<Categoria> updateCategoria(@PathVariable(value="id") long id, @RequestBody Categoria categoria){
+	public ResponseEntity<Categoria> updateCategoria(@PathVariable(value = "id") long id,
+			@RequestBody Categoria categoria) {
 		Optional<Categoria> categoria0 = categoriaRepository.findById(id);
 		if (categoria0.isPresent()) {
 			categoria.setId(categoria0.get().getId());
@@ -69,5 +71,5 @@ public class CategoriaController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
+
 }

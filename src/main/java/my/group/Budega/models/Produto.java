@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,7 +26,7 @@ public class Produto implements Serializable {
 	private double preco;
 	
 	@ManyToOne
-	@JoinColumn(name="categoria_id", referencedColumnName="id", nullable=false)
+	@JoinColumn(referencedColumnName="id", nullable = false)
 	private Categoria categoria;
 
 	public long getId() {
@@ -59,7 +60,7 @@ public class Produto implements Serializable {
 	public void setPreco(double preco) {
 		this.preco = preco;
 	}
-	
+
 	public Categoria getCategoria() {
 		return categoria;
 	}
@@ -68,5 +69,4 @@ public class Produto implements Serializable {
 		this.categoria = categoria;
 	}
 
-	
 }

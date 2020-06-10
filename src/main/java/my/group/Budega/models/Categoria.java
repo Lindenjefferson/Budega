@@ -42,13 +42,5 @@ private static final long serialVersionUID = 1L;
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-
-	public List<Produto> getProduto() {
-		return produto;
-	}
-
-	public void setProduto(List<Produto> produto) {
-		this.produto = produto;
-	}
 	
 }
