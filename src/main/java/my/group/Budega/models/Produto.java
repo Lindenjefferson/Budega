@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import my.group.Budega.models.DTO.ProdutoDTO;
+
 @Entity
 public class Produto implements Serializable {
 	
@@ -28,6 +30,16 @@ public class Produto implements Serializable {
 	@ManyToOne
 	@JoinColumn(referencedColumnName="id", nullable = false)
 	private Categoria categoria;
+
+	public Produto(ProdutoDTO dto, Categoria categoria) {
+        this.id = dto.getId();
+        this.nome = dto.getNome();
+        this.quantidade = dto.getQuantidade();
+        this.preco = dto.getPreco();
+        this.categoria = categoria;
+    }
+	
+	public Produto() {}
 
 	public long getId() {
 		return id;

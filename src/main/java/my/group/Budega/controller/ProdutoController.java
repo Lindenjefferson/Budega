@@ -1,73 +1,88 @@
 package my.group.Budega.controller;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
+import my.group.Budega.models.Categoria;
 import my.group.Budega.models.Produto;
+import my.group.Budega.models.DTO.ProdutoDTO;
 import my.group.Budega.repository.CategoriaRepository;
 import my.group.Budega.repository.ProdutoRepository;
 
-@RestController
+@Controller
+@RequestMapping("/produto")
 public class ProdutoController {
 
 	@Autowired
 	ProdutoRepository produtoRepository;
 
-	@GetMapping("/produto")
-	public ResponseEntity<List<Produto>> getAllProdutos() {
-		List<Produto> produtoList = produtoRepository.findAll();
-		if (produtoList.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	@Autowired
+	CategoriaRepository categoriaRepository;
+
+	@GetMapping
+	public ModelAndView listProdutos() {
+		ModelAndView mv = new ModelAndView("listaProdutos");
+		mv.addObject("produtos", produtoRepository.findAll());
+		return mv;
+	}
+
+	@GetMapping("/{id}")
+	public ModelAndView listOneProduto(@PathVariable(name = "id") long id) {
+		ModelAndView mv = new ModelAndView("listaProdutos");
+		mv.addObject("produto", produtoRepository.findById(id));
+		return mv;
+	}
+
+	@GetMapping("/add")
+	public ModelAndView addProduto() {
+		ModelAndView mv = new ModelAndView("addProdutos");
+		return mv;
+	}
+	
+	@PostMapping
+	public String saveProduto(ProdutoDTO produtoDTO) {
+		Optional<Categoria> categoria = categoriaRepository.findById(produtoDTO.getCategoriaID());
+		if (categoria.isPresent()) {
+			Produto produto = new Produto(produtoDTO, categoria.get());
+			produtoRepository.save(produto);
+			return "redirect:/produto";
 		} else {
-			return new ResponseEntity<List<Produto>>(produtoList, HttpStatus.OK);
+			return "Erro ao salvar";
 		}
 	}
 
-	@GetMapping("/produto/{id}")
-	public ResponseEntity<Produto> getOneProduto(@PathVariable(value = "id") long id) {
-		Optional<Produto> produto = produtoRepository.findById(id);
-		if (produto.isPresent()) {
-			return new ResponseEntity<Produto>(produto.get(), HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-	}
-
-	@PostMapping("/produto")
-	public ResponseEntity<Produto> saveProduto(@RequestBody Produto produto) {
-		return new ResponseEntity<Produto>(produtoRepository.save(produto), HttpStatus.OK);
-	}
-
-	@DeleteMapping("/produto/{id}")
-	public ResponseEntity<Produto> deleteProduto(@PathVariable(value = "id") long id) {
+	@DeleteMapping("/{id}")
+	public String deleteProduto(@PathVariable(name = "id") long id) {
 		Optional<Produto> produto = produtoRepository.findById(id);
 		if (produto.isPresent()) {
 			produtoRepository.deleteById(id);
-			return new ResponseEntity<>(HttpStatus.OK);
+			return "redirect:/produto";
 		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return "Erro ao deletar";
 		}
 	}
 
-	@PostMapping("/produto/{id}")
-	public ResponseEntity<Produto> updateProduto(@PathVariable(value = "id") long id, @RequestBody Produto produto) {
+	@PutMapping("/add/{id}")
+	public String updateProduto(ProdutoDTO produtoDTO, @PathVariable(name = "id") long id) {
+		Optional<Categoria> categoria = categoriaRepository.findById(produtoDTO.getCategoriaID());
 		Optional<Produto> produto0 = produtoRepository.findById(id);
-		if (produto0.isPresent()) {
+		if (produto0.isPresent() && categoria.isPresent()) {
+			Produto produto = new Produto(produtoDTO, categoria.get());
 			produto.setId(produto0.get().getId());
-			return new ResponseEntity<Produto>(produtoRepository.save(produto), HttpStatus.OK);
+			produtoRepository.save(produto);
+			return "redirect:/produto";
 		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return "Erro ao salvar";
 		}
 	}
-
+	
 }
