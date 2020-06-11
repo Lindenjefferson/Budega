@@ -37,20 +37,27 @@ public class ProdutoController {
 
 	@GetMapping("/{id}")
 	public ModelAndView listOneProduto(@PathVariable(name = "id") long id) {
-		ModelAndView mv = new ModelAndView("listaProdutos");
+		ModelAndView mv = new ModelAndView("addProdutos");
 		mv.addObject("produto", produtoRepository.findById(id));
 		return mv;
 	}
-
+	
 	@GetMapping("/add")
 	public ModelAndView addProduto() {
 		ModelAndView mv = new ModelAndView("addProdutos");
 		return mv;
 	}
 	
+	@GetMapping("/{nome}")
+	public ModelAndView buscarProdutos(@PathVariable(name = "nome") String nome) {
+		ModelAndView mv = new ModelAndView("listaProdutos");
+		mv.addObject("produtos", produtoRepository.findByNomeContainingIgnoreCase(nome));
+		return mv;
+	}
+	
 	@PostMapping
 	public String saveProduto(ProdutoDTO produtoDTO) {
-		Optional<Categoria> categoria = categoriaRepository.findById(produtoDTO.getCategoriaID());
+		Optional<Categoria> categoria = categoriaRepository.findByNome(produtoDTO.getCategoriaNome());
 		if (categoria.isPresent()) {
 			Produto produto = new Produto(produtoDTO, categoria.get());
 			produtoRepository.save(produto);
@@ -73,7 +80,7 @@ public class ProdutoController {
 
 	@PutMapping("/add/{id}")
 	public String updateProduto(ProdutoDTO produtoDTO, @PathVariable(name = "id") long id) {
-		Optional<Categoria> categoria = categoriaRepository.findById(produtoDTO.getCategoriaID());
+		Optional<Categoria> categoria = categoriaRepository.findByNome(produtoDTO.getCategoriaNome());
 		Optional<Produto> produto0 = produtoRepository.findById(id);
 		if (produto0.isPresent() && categoria.isPresent()) {
 			Produto produto = new Produto(produtoDTO, categoria.get());

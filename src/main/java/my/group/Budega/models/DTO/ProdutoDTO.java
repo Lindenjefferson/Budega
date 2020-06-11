@@ -8,7 +8,7 @@ public class ProdutoDTO {
 	private int quantidade;
 	private double preco;
 	
-	private Long categoriaID;
+	private String categoriaNome;
 
 	public long getId() {
 		return id;
@@ -42,12 +42,12 @@ public class ProdutoDTO {
 		this.preco = preco;
 	}
 
-	public Long getCategoriaID() {
-		return categoriaID;
+	public String getCategoriaNome() {
+		return categoriaNome;
 	}
 
-	public void setCategoriaID(Long categoriaID) {
-		this.categoriaID = categoriaID;
+	public void setCategoriaNome(String categoriaNome) {
+		this.categoriaNome = categoriaNome;
 	}
 	
 }

@@ -24,21 +24,8 @@ public class CategoriaController {
 	
 	@GetMapping
 	public ModelAndView listCategorias() {
-		ModelAndView mv = new ModelAndView("ListaCategorias");
+		ModelAndView mv = new ModelAndView("editCategoria");
 		mv.addObject("categorias", categoriaRepository.findAll());
-		return mv;
-	}
-	
-	@GetMapping("/{id}")
-	public ModelAndView listOneCategoria(@PathVariable(name = "id") long id) {
-		ModelAndView mv = new ModelAndView("ListaCategorias");
-		mv.addObject("categoria", categoriaRepository.findById(id));
-		return mv;
-	}
-	
-	@GetMapping("/add")
-	public ModelAndView addProduto() {
-		ModelAndView mv = new ModelAndView("addProdutos");
 		return mv;
 	}
 	
