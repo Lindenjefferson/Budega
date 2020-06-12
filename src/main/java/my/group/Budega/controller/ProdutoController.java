@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import my.group.Budega.models.Categoria;
@@ -30,27 +31,29 @@ public class ProdutoController {
 
 	@GetMapping
 	public ModelAndView listProdutos() {
-		ModelAndView mv = new ModelAndView("listaProdutos");
+		ModelAndView mv = new ModelAndView("Produto/listaProdutos");
 		mv.addObject("produtos", produtoRepository.findAll());
 		return mv;
 	}
 
 	@GetMapping("/{id}")
 	public ModelAndView listOneProduto(@PathVariable(name = "id") long id) {
-		ModelAndView mv = new ModelAndView("addProdutos");
+		ModelAndView mv = new ModelAndView("Produto/addProdutos");
+		mv.addObject("categorias", categoriaRepository.findAllByOrderByNomeAsc());
 		mv.addObject("produto", produtoRepository.findById(id));
 		return mv;
 	}
 	
 	@GetMapping("/add")
 	public ModelAndView addProduto() {
-		ModelAndView mv = new ModelAndView("addProdutos");
+		ModelAndView mv = new ModelAndView("Produto/addProdutos");
+		mv.addObject("categorias", categoriaRepository.findAllByOrderByNomeAsc());
 		return mv;
 	}
 	
-	@GetMapping("/{nome}")
-	public ModelAndView buscarProdutos(@PathVariable(name = "nome") String nome) {
-		ModelAndView mv = new ModelAndView("listaProdutos");
+	@PostMapping("/buscar")
+	public ModelAndView buscarProdutos(@RequestParam("busca") String nome) {
+		ModelAndView mv = new ModelAndView("Produto/listaProdutos");
 		mv.addObject("produtos", produtoRepository.findByNomeContainingIgnoreCase(nome));
 		return mv;
 	}
@@ -67,7 +70,7 @@ public class ProdutoController {
 		}
 	}
 
-	@DeleteMapping("/{id}")
+	@GetMapping("delete/{id}")
 	public String deleteProduto(@PathVariable(name = "id") long id) {
 		Optional<Produto> produto = produtoRepository.findById(id);
 		if (produto.isPresent()) {
@@ -78,7 +81,7 @@ public class ProdutoController {
 		}
 	}
 
-	@PutMapping("/add/{id}")
+	@GetMapping("update/{id}")
 	public String updateProduto(ProdutoDTO produtoDTO, @PathVariable(name = "id") long id) {
 		Optional<Categoria> categoria = categoriaRepository.findByNome(produtoDTO.getCategoriaNome());
 		Optional<Produto> produto0 = produtoRepository.findById(id);

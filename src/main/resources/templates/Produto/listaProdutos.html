@@ -17,8 +17,9 @@
 		<div>
 			<a class="btn btn-primary" th:href="@{/categoria}"> Categorias </a>
 			<a class="btn btn-primary" th:href="@{/produto/add}"> Produtos </a>
-			<form action="">
-				<input type="text"> <a class="btn btn-success"> Buscar </a>
+			<form action="../produto/buscar" method="post">
+				<input type="text" name="busca"> 
+				<button class="btn btn-success"> Buscar </button>
 			</form>
 		</div>
 		<div>

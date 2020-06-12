@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import my.group.Budega.models.Categoria;
@@ -24,7 +25,7 @@ public class CategoriaController {
 	
 	@GetMapping
 	public ModelAndView listCategorias() {
-		ModelAndView mv = new ModelAndView("editCategoria");
+		ModelAndView mv = new ModelAndView("Categoria/editCategoria");
 		mv.addObject("categorias", categoriaRepository.findAll());
 		return mv;
 	}
@@ -35,7 +36,7 @@ public class CategoriaController {
 		return "redirect:/categoria";
 	}
 	
-	@DeleteMapping("/{id}")
+	@GetMapping("delete/{id}")
 	public String deleteCategoria(@PathVariable(name = "id") long id) {
 		Optional<Categoria> categoria = categoriaRepository.findById(id);
 		if(categoria.isPresent()) {
@@ -46,7 +47,7 @@ public class CategoriaController {
 		}
 	}
 	
-	@PutMapping("/{id}")
+	@GetMapping("update/{id}")
 	public String updateCategoria(Categoria categoria, @PathVariable(name = "id") long id) {
 		Optional<Categoria> categoria0 = categoriaRepository.findById(id);
 		if(categoria0.isPresent()) {
@@ -56,6 +57,13 @@ public class CategoriaController {
 		} else {
 			return "Erro ao atualizar";
 		}
+	}
+	
+	@PostMapping("/buscar")
+	public ModelAndView buscarProdutos(@RequestParam("busca") String nome) {
+		ModelAndView mv = new ModelAndView("Categoria/editCategoria");
+		mv.addObject("categorias", categoriaRepository.findByNomeContainingIgnoreCase(nome));
+		return mv;
 	}
 	
 }
