@@ -4,43 +4,52 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import my.group.Budega.models.Categoria;
-import my.group.Budega.repository.CategoriaRepository;
+import my.group.Budega.service.CategoriaService;
 
 @Controller
 @RequestMapping("/categoria")
 public class CategoriaController {
 	
 	@Autowired
-	CategoriaRepository categoriaRepository;
+	CategoriaService categoriaService;
 	
 	@GetMapping
 	public ModelAndView listCategorias() {
 		ModelAndView mv = new ModelAndView("Categoria/editCategoria");
-		mv.addObject("categorias", categoriaRepository.findAll());
+		mv.addObject("categorias", categoriaService.findAll());
+		Categoria categoriaObj = new Categoria();
+		mv.addObject("categoriaObj", categoriaObj);
+		return mv;
+	}
+	
+	@GetMapping("/{id}")
+	public ModelAndView listOneCategoria(@PathVariable(name = "id") long id) {
+		ModelAndView mv = new ModelAndView("Categoria/editCategoria");
+		mv.addObject("categorias", categoriaService.findAll());
+		Optional<Categoria> categoriaObj = categoriaService.findByID(id);
+		mv.addObject("categoriaObj", categoriaObj);
 		return mv;
 	}
 	
 	@PostMapping
 	public String saveCategoria(Categoria categoria) {
-		categoriaRepository.save(categoria);
+		categoriaService.save(categoria);
 		return "redirect:/categoria";
 	}
 	
 	@GetMapping("delete/{id}")
 	public String deleteCategoria(@PathVariable(name = "id") long id) {
-		Optional<Categoria> categoria = categoriaRepository.findById(id);
+		Optional<Categoria> categoria = categoriaService.findByID(id);
 		if(categoria.isPresent()) {
-			categoriaRepository.deleteById(id);
+			categoriaService.delete(id);
 			return "redirect:/categoria";
 		} else {
 			return "Erro ao deletar";
@@ -49,10 +58,10 @@ public class CategoriaController {
 	
 	@GetMapping("update/{id}")
 	public String updateCategoria(Categoria categoria, @PathVariable(name = "id") long id) {
-		Optional<Categoria> categoria0 = categoriaRepository.findById(id);
+		Optional<Categoria> categoria0 = categoriaService.findByID(id);
 		if(categoria0.isPresent()) {
 			categoria.setId(categoria0.get().getId());
-			categoriaRepository.save(categoria);
+			categoriaService.save(categoria);
 			return "redirect:/categoria";
 		} else {
 			return "Erro ao atualizar";
@@ -60,9 +69,11 @@ public class CategoriaController {
 	}
 	
 	@PostMapping("/buscar")
-	public ModelAndView buscarProdutos(@RequestParam("busca") String nome) {
+	public ModelAndView buscarProdutos(@RequestParam("busca") String name) {
 		ModelAndView mv = new ModelAndView("Categoria/editCategoria");
-		mv.addObject("categorias", categoriaRepository.findByNomeContainingIgnoreCase(nome));
+		mv.addObject("categorias", categoriaService.findByNames(name));
+		Categoria categoriaObj = new Categoria();
+		mv.addObject("categoriaObj", categoriaObj);
 		return mv;
 	}
 	

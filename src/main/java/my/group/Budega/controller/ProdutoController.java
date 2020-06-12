@@ -4,11 +4,9 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,54 +14,56 @@ import org.springframework.web.servlet.ModelAndView;
 import my.group.Budega.models.Categoria;
 import my.group.Budega.models.Produto;
 import my.group.Budega.models.DTO.ProdutoDTO;
-import my.group.Budega.repository.CategoriaRepository;
-import my.group.Budega.repository.ProdutoRepository;
+import my.group.Budega.service.CategoriaService;
+import my.group.Budega.service.ProdutoService;
 
 @Controller
 @RequestMapping("/produto")
 public class ProdutoController {
 
 	@Autowired
-	ProdutoRepository produtoRepository;
+	ProdutoService produtoService;
 
 	@Autowired
-	CategoriaRepository categoriaRepository;
+	CategoriaService categoriaService;
 
 	@GetMapping
 	public ModelAndView listProdutos() {
 		ModelAndView mv = new ModelAndView("Produto/listaProdutos");
-		mv.addObject("produtos", produtoRepository.findAll());
+		mv.addObject("produtos", produtoService.findAll());
+		ProdutoDTO produtoObj = new ProdutoDTO();
+		mv.addObject("produtoObj", produtoObj);
 		return mv;
 	}
 
 	@GetMapping("/{id}")
 	public ModelAndView listOneProduto(@PathVariable(name = "id") long id) {
-		ModelAndView mv = new ModelAndView("Produto/addProdutos");
-		mv.addObject("categorias", categoriaRepository.findAllByOrderByNomeAsc());
-		mv.addObject("produto", produtoRepository.findById(id));
+		ModelAndView mv = new ModelAndView("Produto/listaProdutos");
+		mv.addObject("categorias", categoriaService.findByNameInOrder());
+		mv.addObject("produto", produtoService.findByID(id));
 		return mv;
 	}
 	
 	@GetMapping("/add")
 	public ModelAndView addProduto() {
-		ModelAndView mv = new ModelAndView("Produto/addProdutos");
-		mv.addObject("categorias", categoriaRepository.findAllByOrderByNomeAsc());
+		ModelAndView mv = new ModelAndView("Produto/listaProdutos");
+		mv.addObject("categorias", categoriaService.findByNameInOrder());
 		return mv;
 	}
 	
 	@PostMapping("/buscar")
-	public ModelAndView buscarProdutos(@RequestParam("busca") String nome) {
+	public ModelAndView buscarProdutos(@RequestParam("busca") String name) {
 		ModelAndView mv = new ModelAndView("Produto/listaProdutos");
-		mv.addObject("produtos", produtoRepository.findByNomeContainingIgnoreCase(nome));
+		mv.addObject("produtos", produtoService.findByNames(name));
 		return mv;
 	}
 	
 	@PostMapping
 	public String saveProduto(ProdutoDTO produtoDTO) {
-		Optional<Categoria> categoria = categoriaRepository.findByNome(produtoDTO.getCategoriaNome());
+		Optional<Categoria> categoria = categoriaService.findBySpcName(produtoDTO.getCategoriaNome());
 		if (categoria.isPresent()) {
 			Produto produto = new Produto(produtoDTO, categoria.get());
-			produtoRepository.save(produto);
+			produtoService.save(produto);
 			return "redirect:/produto";
 		} else {
 			return "Erro ao salvar";
@@ -72,9 +72,9 @@ public class ProdutoController {
 
 	@GetMapping("delete/{id}")
 	public String deleteProduto(@PathVariable(name = "id") long id) {
-		Optional<Produto> produto = produtoRepository.findById(id);
+		Optional<Produto> produto = produtoService.findByID(id);
 		if (produto.isPresent()) {
-			produtoRepository.deleteById(id);
+			produtoService.delete(id);
 			return "redirect:/produto";
 		} else {
 			return "Erro ao deletar";
@@ -83,12 +83,12 @@ public class ProdutoController {
 
 	@GetMapping("update/{id}")
 	public String updateProduto(ProdutoDTO produtoDTO, @PathVariable(name = "id") long id) {
-		Optional<Categoria> categoria = categoriaRepository.findByNome(produtoDTO.getCategoriaNome());
-		Optional<Produto> produto0 = produtoRepository.findById(id);
+		Optional<Categoria> categoria = categoriaService.findBySpcName(produtoDTO.getCategoriaNome());
+		Optional<Produto> produto0 = produtoService.findByID(id);
 		if (produto0.isPresent() && categoria.isPresent()) {
 			Produto produto = new Produto(produtoDTO, categoria.get());
 			produto.setId(produto0.get().getId());
-			produtoRepository.save(produto);
+			produtoService.save(produto);
 			return "redirect:/produto";
 		} else {
 			return "Erro ao salvar";

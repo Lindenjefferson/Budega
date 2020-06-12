@@ -7,8 +7,10 @@
     <title> Budega </title>
   </head>
   <body>
+  
 	<div>
 		<a class="btn btn-primary" th:href="@{/produto}"> Produtos </a>
+		<button class="btn btn-primary" data-toggle="modal" data-target="#ModalCenter"> Nova Categoria </button>
 		<form action="../categoria/buscar" method="post">
 			<input type="text" name="busca"> 
 			<button class="btn btn-success"> Buscar </button>
@@ -24,17 +26,41 @@
 	            </tr>
 	        </thead>
 	        <tbody>
-	            <tr th:each="categoria : ${categorias}"> 
-	                <td th:text="${categoria.nome} "> </td>
+	            <tr th:each="cat : ${categorias}"> 
+	                <td th:text="${cat.nome} "> </td>
 	                <td>
-	                	<a class="btn btn-info" th:href="@{/categoria/update/{id}(id=${categoria.id})}"> Editar </a>
-	                	<a class="btn btn-danger" th:href="@{/categoria/delete/{id}(id=${categoria.id})}"> Deletar </a>
+	                	<a class="btn btn-info" th:href="@{/categoria/{id}(id=${cat.id})}"> Editar </a>
+	                	<a class="btn btn-danger" th:href="@{/categoria/delete/{id}(id=${cat.id})}"> Deletar </a>
 	                </td>
 	            </tr>
 	        </tbody>
 	    </table>
 	</div>
-
+	
+	<div class="modal fade" id="ModalCenter" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" >
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title"> Categoria </h5>
+				</div>
+				<form class="form-horizontal" th:object="${categoriaObj}" th:action="@{/categoria}" method="POST">
+					<div class="modal-body">
+						<div class="form-group">
+							<fieldset>
+								<input type="hidden" th:field="*{id}"/>
+								<label> Nome: </label>
+								<input type="text" class="form-control input-sm" th:field="*{nome}" maxlength="50"/>
+							</fieldset>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary">Save changes</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
