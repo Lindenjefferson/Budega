@@ -31,6 +31,7 @@ public class ProdutoController {
 	public ModelAndView listProdutos() {
 		ModelAndView mv = new ModelAndView("Produto/listaProdutos");
 		mv.addObject("produtos", produtoService.findAll());
+		mv.addObject("categorias", categoriaService.findByNameInOrder());
 		ProdutoDTO produtoObj = new ProdutoDTO();
 		mv.addObject("produtoObj", produtoObj);
 		return mv;
@@ -40,17 +41,21 @@ public class ProdutoController {
 	public ModelAndView listOneProduto(@PathVariable(name = "id") long id) {
 		ModelAndView mv = new ModelAndView("Produto/listaProdutos");
 		mv.addObject("categorias", categoriaService.findByNameInOrder());
-		mv.addObject("produto", produtoService.findByID(id));
+		mv.addObject("produtos", produtoService.findAll());
+		mv.addObject("produtoObj", produtoDTO(produtoService.findByID(id)));
 		return mv;
 	}
 	
-	@GetMapping("/add")
-	public ModelAndView addProduto() {
-		ModelAndView mv = new ModelAndView("Produto/listaProdutos");
-		mv.addObject("categorias", categoriaService.findByNameInOrder());
-		return mv;
+	private ProdutoDTO produtoDTO (Optional<Produto> produto0) {
+		ProdutoDTO produto = new ProdutoDTO();
+		produto.setId(produto0.get().getId());
+		produto.setNome(produto0.get().getNome());
+		produto.setPreco(produto0.get().getPreco());
+		produto.setQuantidade(produto0.get().getQuantidade());
+		produto.setCategoriaNome(produto0.get().getCategoria().getNome());
+		return produto;
 	}
-	
+
 	@PostMapping("/buscar")
 	public ModelAndView buscarProdutos(@RequestParam("busca") String name) {
 		ModelAndView mv = new ModelAndView("Produto/listaProdutos");
@@ -66,7 +71,7 @@ public class ProdutoController {
 			produtoService.save(produto);
 			return "redirect:/produto";
 		} else {
-			return "Erro ao salvar";
+			return "Categoria não existe";
 		}
 	}
 
@@ -78,20 +83,6 @@ public class ProdutoController {
 			return "redirect:/produto";
 		} else {
 			return "Erro ao deletar";
-		}
-	}
-
-	@GetMapping("update/{id}")
-	public String updateProduto(ProdutoDTO produtoDTO, @PathVariable(name = "id") long id) {
-		Optional<Categoria> categoria = categoriaService.findBySpcName(produtoDTO.getCategoriaNome());
-		Optional<Produto> produto0 = produtoService.findByID(id);
-		if (produto0.isPresent() && categoria.isPresent()) {
-			Produto produto = new Produto(produtoDTO, categoria.get());
-			produto.setId(produto0.get().getId());
-			produtoService.save(produto);
-			return "redirect:/produto";
-		} else {
-			return "Erro ao salvar";
 		}
 	}
 	

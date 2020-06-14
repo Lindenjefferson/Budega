@@ -1,68 +1,86 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <title> Budega </title>
-  </head>
-  <body>
-  
-	<div>
-		<a class="btn btn-primary" th:href="@{/produto}"> Produtos </a>
-		<button class="btn btn-primary" data-toggle="modal" data-target="#ModalCenter"> Nova Categoria </button>
-		<form action="../categoria/buscar" method="post">
-			<input type="text" name="busca"> 
-			<button class="btn btn-success"> Buscar </button>
-		</form>
-	</div>
-	
-	<div> 
-		<table class="table table-hover table-dark">
-			<thead>
-				<tr>
-					<th scope="col">Nome</th>
-					<th scope="col">Ações</th>
-	            </tr>
-	        </thead>
-	        <tbody>
-	            <tr th:each="cat : ${categorias}"> 
-	                <td th:text="${cat.nome} "> </td>
-	                <td>
-	                	<a class="btn btn-info" th:href="@{/categoria/{id}(id=${cat.id})}"> Editar </a>
-	                	<a class="btn btn-danger" th:href="@{/categoria/delete/{id}(id=${cat.id})}"> Deletar </a>
-	                </td>
-	            </tr>
-	        </tbody>
-	    </table>
-	</div>
-	
-	<div class="modal fade" id="ModalCenter" tabindex="-1" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered" >
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title"> Categoria </h5>
-				</div>
-				<form class="form-horizontal" th:object="${categoriaObj}" th:action="@{/categoria}" method="POST">
-					<div class="modal-body">
-						<div class="form-group">
-							<fieldset>
-								<input type="hidden" th:field="*{id}"/>
-								<label> Nome: </label>
-								<input type="text" class="form-control input-sm" th:field="*{nome}" maxlength="50"/>
-							</fieldset>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet"
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+			integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+			crossorigin="anonymous">
+		<title> Budega </title>
+	</head>
+	<body>
+		<div>
+			<a class="btn btn-primary" th:href="@{/produto}"> Produtos </a>
+			<button class="btn btn-primary" data-toggle="modal" data-target="#ModalCenter">Nova Categoria</button>
+			<form action="../categoria/buscar" method="post">
+				<input type="text" name="busca">
+				<button class="btn btn-success">Buscar</button>
+			</form>
+		</div>
+		<div>
+			<table class="table table-hover table-dark">
+				<thead>
+					<tr>
+						<th scope="col">Nome</th>
+						<th scope="col">Ações</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="cat : ${categorias}">
+						<td th:text="${cat.nome} "></td>
+						<td>
+							<a class="btn btn-info" th:href="@{/categoria/{id}(id=${cat.id})}"> Editar </a> 
+							<a class="btn btn-danger" th:href="@{/categoria/delete/{id}(id=${cat.id})}"> Deletar </a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="modal fade" id="ModalCenter" tabindex="-1" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title"> Categoria </h5>
+					</div>
+					<form class="form-horizontal" th:object="${categoriaObj}" th:action="@{/categoria}" method="POST">
+						<div class="modal-body">
+							<div class="form-group">
+								<fieldset>
+									<input type="hidden" th:field="*{id}" /> 
+									<label> Nome: </label>
+									<input type="text" class="form-control input-sm" th:field="*{nome}" maxlength="50" />
+								</fieldset>
+							</div>
 						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary">Save changes</button>
-					</div>
-				</form>
+						<div class="modal-footer">
+							<a class="btn btn-secondary" th:href="@{/categoria}" > Fechar </a>
+							<button type="submit" class="btn btn-primary"> Salvar </button>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
-	</div>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-  </body>
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+			integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+			crossorigin="anonymous"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+			integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+			crossorigin="anonymous"></script>
+		<script
+			src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+			integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+			crossorigin="anonymous"></script>
+		<script>
+			var url = window.location.href;
+			var id = url.split('categoria/');
+			if (id[1] != null && id[1] != 0) {
+				$(document).ready(function() {
+					$('#ModalCenter').modal('show');
+				});
+			}
+		</script>
+	</body>
 </html>

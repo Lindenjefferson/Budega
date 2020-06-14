@@ -55,19 +55,7 @@ public class CategoriaController {
 			return "Erro ao deletar";
 		}
 	}
-	
-	@GetMapping("update/{id}")
-	public String updateCategoria(Categoria categoria, @PathVariable(name = "id") long id) {
-		Optional<Categoria> categoria0 = categoriaService.findByID(id);
-		if(categoria0.isPresent()) {
-			categoria.setId(categoria0.get().getId());
-			categoriaService.save(categoria);
-			return "redirect:/categoria";
-		} else {
-			return "Erro ao atualizar";
-		}
-	}
-	
+
 	@PostMapping("/buscar")
 	public ModelAndView buscarProdutos(@RequestParam("busca") String name) {
 		ModelAndView mv = new ModelAndView("Categoria/editCategoria");
