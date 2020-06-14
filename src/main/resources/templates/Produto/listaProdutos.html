@@ -69,7 +69,7 @@
 						<td th:text="${produto.nome} "></td>
 						<td th:text="${produto.preco} "></td>
 						<td th:text="${produto.quantidade} "></td>
-						<td><a class="btn btn-info" th:href="@{/produto/{id}(id=${produto.id})}"> Editar </a></td>
+						<td><a class="btn btn-info" th:href="@{/produto/={id}(id=${produto.id})}"> Editar </a></td>
 					</tr>
 				</tbody>
 			</table>
@@ -91,7 +91,7 @@
 			crossorigin="anonymous"></script>
 		<script>
 			var url = window.location.href;
-			var id = url.split('produto/');
+			var id = url.split('=');
 			if (id[1] != null && id[1] != 0) {
 				$(document).ready(function() {
 					$('#ModalCenter').modal('show');

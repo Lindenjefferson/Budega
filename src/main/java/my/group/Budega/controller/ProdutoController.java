@@ -37,7 +37,7 @@ public class ProdutoController {
 		return mv;
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/={id}")
 	public ModelAndView listOneProduto(@PathVariable(name = "id") long id) {
 		ModelAndView mv = new ModelAndView("Produto/listaProdutos");
 		mv.addObject("categorias", categoriaService.findByNameInOrder());
@@ -60,6 +60,8 @@ public class ProdutoController {
 	public ModelAndView buscarProdutos(@RequestParam("busca") String name) {
 		ModelAndView mv = new ModelAndView("Produto/listaProdutos");
 		mv.addObject("produtos", produtoService.findByNames(name));
+		ProdutoDTO produtoObj = new ProdutoDTO();
+		mv.addObject("produtoObj", produtoObj);
 		return mv;
 	}
 	

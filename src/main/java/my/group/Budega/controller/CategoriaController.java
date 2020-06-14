@@ -30,7 +30,7 @@ public class CategoriaController {
 		return mv;
 	}
 	
-	@GetMapping("/{id}")
+	@GetMapping("/={id}")
 	public ModelAndView listOneCategoria(@PathVariable(name = "id") long id) {
 		ModelAndView mv = new ModelAndView("Categoria/editCategoria");
 		mv.addObject("categorias", categoriaService.findAll());
