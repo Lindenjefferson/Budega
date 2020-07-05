@@ -10,14 +10,44 @@
 			crossorigin="anonymous">
 		<title> Budega </title>
 	</head>
-	<body>
-		<div>
-			<a class="btn btn-primary" th:href="@{/categoria}"> Categorias </a> 
-			<a class="btn btn-primary" th:href="@{/produto/add}" data-toggle="modal" data-target="#ModalCenter"> Novo Produto </a>
-			<form action="../produto/buscar" method="post">
-				<input type="text" name="busca">
-				<button class="btn btn-success">Buscar</button>
-			</form>
+	<body style="background-color: rgb(90, 90, 90);">
+		<div class="container mt-4">
+			<nav class="navbar">
+				<ul class="nav nav-pills nav-justified">
+					<li class="nav-item"> <a class="btn btn-primary mr-sm-2" th:href="@{/categoria}"> Categorias </a> </li>
+					<li class="nav-item"> <a class="btn btn-primary mr-sm-2" th:href="@{/produto/add}" data-toggle="modal"
+							data-target="#ModalCenter"> Novo Produto </a> </li>
+				</ul>
+				<form class="form-inline" action="../produto/buscar" method="post">
+					<input class="form-control mr-sm-2" type="text" name="busca">
+					<button class="btn btn-success">Buscar</button>
+				</form>
+			</nav>
+			<div class="table-responsive mt-3">
+				<table class="table table-hover table-dark">
+					<thead class="thead-dark">
+						<tr>
+							<th scope="col">Categoria</th>
+							<th scope="col">Nome</th>
+							<th scope="col">Preço/Unidade</th>
+							<th scope="col">Quantidade</th>
+							<th scope="col">Ações</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="produto : ${produtos}">
+							<td th:text="${produto.categoria.nome} "></td>
+							<td th:text="${produto.nome} "></td>
+							<td th:text="${produto.preco} "></td>
+							<td th:text="${produto.quantidade} "></td>
+							<td>
+								<a class="btn btn-info" th:href="@{/produto/={id}(id=${produto.id})}"> Editar </a>
+								<a class="btn btn-danger" th:href="@{/produto/delete/{id}(id=${produto.id})}"> Deletar </a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
 		<div class="modal fade" id="ModalCenter" tabindex="-1" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered">
@@ -32,7 +62,7 @@
 									<input type="hidden" th:field="*{id}" /> 
 									<label> Nome: </label>
 									<input type="text" class="form-control input-sm" th:field="*{nome}" maxlength="50" /> 
-									<label> Preço: </label> 
+									<label> Preço/Unidade: </label> 
 									<input type="number" min="0.00" step="0.01" class="form-control input-sm" th:field="*{preco}" /> 
 									<label> Quantidade: </label> 
 									<input type="number" min="0" class="form-control input-sm" th:field="*{quantidade}" /> 
@@ -51,32 +81,6 @@
 					</form>
 				</div>
 			</div>
-		</div>
-		<div>
-			<table class="table table-striped">
-				<thead class="thead-dark">
-					<tr>
-						<th scope="col">Categoria</th>
-						<th scope="col">Nome</th>
-						<th scope="col">Preço</th>
-						<th scope="col">Quantidade</th>
-						<th scope="col"></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="produto : ${produtos}">
-						<td th:text="${produto.categoria.nome} "></td>
-						<td th:text="${produto.nome} "></td>
-						<td th:text="${produto.preco} "></td>
-						<td th:text="${produto.quantidade} "></td>
-						<td><a class="btn btn-info" th:href="@{/produto/={id}(id=${produto.id})}"> Editar </a></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<div>
-			<a class="btn btn-secundary"> Próximo </a> 
-			<a class="btn btn-secundary"> Anterior </a>
 		</div>
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 			integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

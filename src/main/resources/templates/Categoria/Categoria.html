@@ -10,33 +10,39 @@
 			crossorigin="anonymous">
 		<title> Budega </title>
 	</head>
-	<body>
-		<div>
-			<a class="btn btn-primary" th:href="@{/produto}"> Produtos </a>
-			<button class="btn btn-primary" data-toggle="modal" data-target="#ModalCenter">Nova Categoria</button>
-			<form action="../categoria/buscar" method="post">
-				<input type="text" name="busca">
-				<button class="btn btn-success">Buscar</button>
-			</form>
-		</div>
-		<div>
-			<table class="table table-hover table-dark">
-				<thead>
-					<tr>
-						<th scope="col">Nome</th>
-						<th scope="col">Ações</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="cat : ${categorias}">
-						<td th:text="${cat.nome} "></td>
-						<td>
-							<a class="btn btn-info" th:href="@{/categoria/={id}(id=${cat.id})}"> Editar </a> 
-							<a class="btn btn-danger" th:href="@{/categoria/delete/{id}(id=${cat.id})}"> Deletar </a>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+	<body style="background-color: rgb(90, 90, 90);">
+		<div class="container mt-4">
+			<nav class="navbar">
+				<ul class="nav nav-pills nav-justified">
+					<li class="nav-item"> <a class="btn btn-primary mr-sm-2" th:href="@{/produto}"> Produtos </a> </li>
+					<li class="nav-item"> <button class="btn btn-primary mr-sm-2" data-toggle="modal"
+							data-target="#ModalCenter">Nova Categoria</button> </li>
+				</ul>
+				<form class="form-inline" action="../categoria/buscar" method="post">
+					<input class="form-control mr-sm-2" type="text" name="busca">
+					<button class="btn btn-success">Buscar</button>
+				</form>
+			</nav>
+			<div class="table-responsive">
+				<table class="table table-hover table-dark mt-3">
+					<thead>
+						<tr>
+							<th scope="col">Nome</th>
+							<th scope="col">Ações</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="cat : ${categorias}">
+							<td th:text="${cat.nome} "></td>
+							<td>
+								<a class="btn btn-info" th:href="@{/categoria/={id}(id=${cat.id})}"> Editar </a>
+								<a class="btn btn-danger" th:href="@{/categoria/delete/{id}(id=${cat.id})}"
+								onclick="return confirm('Deseja mesmo deletar todos os produtos dessa categoria?')"> Deletar </a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
 		<div class="modal fade" id="ModalCenter" tabindex="-1" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered">

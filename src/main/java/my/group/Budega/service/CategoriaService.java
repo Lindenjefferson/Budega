@@ -13,7 +13,7 @@ import my.group.Budega.repository.CategoriaRepository;
 public class CategoriaService {
 
 	@Autowired
-	CategoriaRepository categoriaRepository;
+	private CategoriaRepository categoriaRepository;
 	
 	public List<Categoria> findAll() {
 		return categoriaRepository.findAll();

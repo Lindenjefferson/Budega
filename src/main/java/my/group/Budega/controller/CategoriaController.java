@@ -19,11 +19,11 @@ import my.group.Budega.service.CategoriaService;
 public class CategoriaController {
 	
 	@Autowired
-	CategoriaService categoriaService;
+	private CategoriaService categoriaService;
 	
 	@GetMapping
 	public ModelAndView listCategorias() {
-		ModelAndView mv = new ModelAndView("Categoria/editCategoria");
+		ModelAndView mv = new ModelAndView("Categoria/Categoria");
 		mv.addObject("categorias", categoriaService.findAll());
 		Categoria categoriaObj = new Categoria();
 		mv.addObject("categoriaObj", categoriaObj);
@@ -32,7 +32,7 @@ public class CategoriaController {
 	
 	@GetMapping("/={id}")
 	public ModelAndView listOneCategoria(@PathVariable(name = "id") long id) {
-		ModelAndView mv = new ModelAndView("Categoria/editCategoria");
+		ModelAndView mv = new ModelAndView("Categoria/Categoria");
 		mv.addObject("categorias", categoriaService.findAll());
 		Optional<Categoria> categoriaObj = categoriaService.findByID(id);
 		mv.addObject("categoriaObj", categoriaObj);
@@ -58,7 +58,7 @@ public class CategoriaController {
 
 	@PostMapping("/buscar")
 	public ModelAndView buscarProdutos(@RequestParam("busca") String name) {
-		ModelAndView mv = new ModelAndView("Categoria/editCategoria");
+		ModelAndView mv = new ModelAndView("Categoria/Categoria");
 		mv.addObject("categorias", categoriaService.findByNames(name));
 		Categoria categoriaObj = new Categoria();
 		mv.addObject("categoriaObj", categoriaObj);

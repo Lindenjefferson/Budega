@@ -13,7 +13,7 @@ import my.group.Budega.repository.ProdutoRepository;
 public class ProdutoService {
 
 	@Autowired
-	ProdutoRepository produtoRepository;
+	private ProdutoRepository produtoRepository;
 	
 	public List<Produto> findAll() {
 		return produtoRepository.findAll();

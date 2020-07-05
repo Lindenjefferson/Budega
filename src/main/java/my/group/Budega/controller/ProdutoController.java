@@ -22,14 +22,14 @@ import my.group.Budega.service.ProdutoService;
 public class ProdutoController {
 
 	@Autowired
-	ProdutoService produtoService;
+	private ProdutoService produtoService;
 
 	@Autowired
 	CategoriaService categoriaService;
 
 	@GetMapping
 	public ModelAndView listProdutos() {
-		ModelAndView mv = new ModelAndView("Produto/listaProdutos");
+		ModelAndView mv = new ModelAndView("Produto/Produtos");
 		mv.addObject("produtos", produtoService.findAll());
 		mv.addObject("categorias", categoriaService.findByNameInOrder());
 		ProdutoDTO produtoObj = new ProdutoDTO();
@@ -39,7 +39,7 @@ public class ProdutoController {
 
 	@GetMapping("/={id}")
 	public ModelAndView listOneProduto(@PathVariable(name = "id") long id) {
-		ModelAndView mv = new ModelAndView("Produto/listaProdutos");
+		ModelAndView mv = new ModelAndView("Produto/Produtos");
 		mv.addObject("categorias", categoriaService.findByNameInOrder());
 		mv.addObject("produtos", produtoService.findAll());
 		mv.addObject("produtoObj", produtoDTO(produtoService.findByID(id)));
@@ -58,7 +58,7 @@ public class ProdutoController {
 
 	@PostMapping("/buscar")
 	public ModelAndView buscarProdutos(@RequestParam("busca") String name) {
-		ModelAndView mv = new ModelAndView("Produto/listaProdutos");
+		ModelAndView mv = new ModelAndView("Produto/Produtos");
 		mv.addObject("produtos", produtoService.findByNames(name));
 		ProdutoDTO produtoObj = new ProdutoDTO();
 		mv.addObject("produtoObj", produtoObj);
